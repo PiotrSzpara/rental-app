@@ -2,6 +2,8 @@ package com.rest.rentalapp.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -16,6 +18,10 @@ public class Apartment {
     private double price;
     private double area;
     private String description;
+    @OneToMany
+    private List<Reservation> reservations = new ArrayList<>();
+    @ManyToMany
+    private List<Client> clients = new ArrayList<>();
 
     public Apartment() {
     }
@@ -39,4 +45,12 @@ public class Apartment {
     public String getDescription() { return description; }
 
     void setDescription(String description) { this.description = description; }
+
+    public List<Reservation> getReservations() { return reservations; }
+
+    void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+
+    public List<Client> getClients() { return clients; }
+
+    void setClients(List<Client> clients) { this.clients = clients; }
 }

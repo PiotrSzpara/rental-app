@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,12 @@ public class ApartmentController {
 
     public ApartmentController(ApartmentRepository apartmentRepository) {
         this.apartmentRepository = apartmentRepository;
+    }
+
+    @PostMapping("/apartments")
+    ResponseEntity<Apartment> createApartment(@RequestBody @Valid Apartment toCreate) {
+        Apartment result = apartmentRepository.save(toCreate);
+        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
     @GetMapping(value = "/apartments", params = {"!sort", "!page", "!size"})

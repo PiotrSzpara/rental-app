@@ -10,9 +10,13 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int rentalPeriod;
-    //private Client owner;
-    //private Client guest;
+    @ManyToOne
+    private Client owner;
+    @ManyToOne
+    private Client guest;
     private double cost;
+    @ManyToOne
+    private Apartment apartment;
 
     public Reservation() {
     }
@@ -25,7 +29,19 @@ public class Reservation {
 
     void setRentalPeriod(int rentalPeriod) { this.rentalPeriod = rentalPeriod; }
 
+    public Client getOwner() { return owner; }
+
+    void setOwner(Client owner) { this.owner = owner; }
+
+    public Client getGuest() { return guest; }
+
+    void setGuest(Client guest) { this.guest = guest; }
+
     public double getCost() { return cost; }
 
     void setCost(double cost) { this.cost = cost; }
+
+    public Apartment getApartment() { return apartment; }
+
+    public void setApartment(Apartment apartment) { this.apartment = apartment; }
 }
