@@ -2,6 +2,7 @@ package com.rest.rentalapp.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,11 @@ public class Apartment {
     private int id;
     @NotBlank(message = "Apartment name must not be empty")
     private String name;
+    @NotBlank
     private double price;
+    @NotBlank
     private double area;
+    @NotBlank
     private String description;
     @OneToMany
     private List<Reservation> reservations = new ArrayList<>();
