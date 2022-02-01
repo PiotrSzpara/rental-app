@@ -2,8 +2,9 @@ package com.rest.rentalapp.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "clients")
@@ -11,30 +12,56 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Column(name = "client_id")
+    private int clientId;
     @NotBlank(message = "Client name must not be empty")
     String name;
-    @ManyToMany
-    private List<Apartment> apartments = new ArrayList<>();
-    @OneToMany
-    private List<Reservation> reservations = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "client_apartment",
+            joinColumns = {@JoinColumn(name = "join_client_id", referencedColumnName = "client_id")},
+            inverseJoinColumns = {@JoinColumn(name = "join_apartment_id", referencedColumnName = "apartment_id")}
+    )
+    private Set<Apartment> apartments = new java.util.LinkedHashSet<>();
+    @OneToMany(targetEntity = Reservation.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guest")
+    private Set<Reservation> guestReservations;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
+    private Set<Reservation> ownerReservations;
+
+    public Set<Apartment> getApartments() {
+        return apartments;
+    }
+
 
     public Client() {
     }
 
-    public int getId() { return id; }
+    public int getClientId() { return clientId; }
 
-    void setId(int id) { this.id = id; }
+    public void setClientId(int clientId) { this.clientId = clientId; }
 
     public String getName() { return name; }
 
     void setName(String name) { this.name = name; }
 
-    public List<Apartment> getApartments() { return apartments; }
+    void setApartments(Set<Apartment> apartments) { this.apartments = apartments; }
 
-    void setApartments(List<Apartment> apartments) { this.apartments = apartments; }
+    public Set<Reservation> getGuestReservations() { return guestReservations; }
 
-    public List<Reservation> getReservations() { return reservations; }
+    void setGuestReservations(Set<Reservation> guestReservations) { this.guestReservations = guestReservations; }
 
-    void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+    public Set<Reservation> getOwnerReservations() { return ownerReservations; }
+
+    public void setOwnerReservations(Set<Reservation> ownerReservations) { this.ownerReservations = ownerReservations; }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientId=" + clientId +
+                ", name='" + name + '\'' +
+                ", apartments=" + apartments +
+                ", guestReservations=" + guestReservations +
+                ", ownerReservations=" + ownerReservations +
+                '}';
+    }
 }

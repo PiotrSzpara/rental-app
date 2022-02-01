@@ -2,9 +2,7 @@ package com.rest.rentalapp.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -13,26 +11,25 @@ public class Apartment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Column(name = "apartment_id")
+    private int apartmentId;
     @NotBlank(message = "Apartment name must not be empty")
     private String name;
-    @NotBlank
     private double price;
-    @NotBlank
     private double area;
-    @NotBlank
     private String description;
-    @OneToMany
-    private List<Reservation> reservations = new ArrayList<>();
-    @ManyToMany
-    private List<Client> clients = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "apartment")
+    private Set<Reservation> reservations;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "apartments")
+    private Set<Client> clients;
 
     public Apartment() {
     }
 
-    public int getId() { return id; }
+    public int getApartmentId() { return apartmentId; }
 
-    public void setId(int id) { this.id = id; }
+    public void setApartmentId(int apartmentId) { this.apartmentId = apartmentId; }
 
     public String getName() { return name; }
 
@@ -50,11 +47,37 @@ public class Apartment {
 
     void setDescription(String description) { this.description = description; }
 
-    public List<Reservation> getReservations() { return reservations; }
+    public Set<Reservation> getReservations() { return reservations; }
 
-    void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+    void setReservations(Set<Reservation> reservations) { this.reservations = reservations; }
 
-    public List<Client> getClients() { return clients; }
+    public Set<Client> getClients() { return clients; }
 
-    void setClients(List<Client> clients) { this.clients = clients; }
+    void setClients(Set<Client> clients) { this.clients = clients; }
+
+    @Override
+    public String toString() {
+        return "Apartment{" +
+                "apartmentId=" + apartmentId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", area=" + area +
+                ", description='" + description + '\'' +
+                ", reservations=" + reservations +
+                ", clients=" + clients +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Apartment)) return false;
+        Apartment apartment = (Apartment) o;
+        return apartmentId == apartment.apartmentId && Double.compare(apartment.price, price) == 0 && Double.compare(apartment.area, area) == 0 && Objects.equals(name, apartment.name) && Objects.equals(description, apartment.description) && Objects.equals(reservations, apartment.reservations) && Objects.equals(clients, apartment.clients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(apartmentId, name, price, area, description, reservations, clients);
+    }
 }

@@ -7,9 +7,9 @@ public interface ClientRepository {
 
     List<Client> findAll();
 
-    Optional<Client> findById(Integer id);
+    Optional<Client> findById(Integer repositoryId);
 
-    boolean existsById(Integer id);
+    boolean existsById(Integer repositoryId);
 
     Client save(Client entity);
 }

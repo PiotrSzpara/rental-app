@@ -7,9 +7,9 @@ public interface ApartmentRepository {
 
     List<Apartment> findAll();
 
-    Optional<Apartment> findById(Integer id);
+    Optional<Apartment> findById(Integer apartmentId);
 
-    boolean existsById(Integer id);
+    boolean existsById(Integer apartmentId);
 
     Apartment save(Apartment entity);
 }
