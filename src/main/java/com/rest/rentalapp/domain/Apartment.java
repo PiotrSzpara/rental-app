@@ -1,59 +1,47 @@
 package com.rest.rentalapp.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
 
-
+@Access(AccessType.FIELD)
+@Getter
+@Setter
 @Entity
-@Table(name = "apartments")
+@Table(name = "APARTMENTS")
 public class Apartment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "apartment_id")
-    private int apartmentId;
+    int apartmentId;
+
     @NotBlank(message = "Apartment name must not be empty")
     private String name;
+
     private double price;
+
     private double area;
+
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "apartment")
+    @OneToMany(targetEntity = Reservation.class, mappedBy = "apartment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Reservation> reservations;
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "apartments")
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "apartments")
     private Set<Client> clients;
+
 
     public Apartment() {
     }
 
-    public int getApartmentId() { return apartmentId; }
+    public Apartment(int apartmentId, String name, double price, double area, String description) {
+    }
 
-    public void setApartmentId(int apartmentId) { this.apartmentId = apartmentId; }
 
-    public String getName() { return name; }
-
-    void setName(String name) { this.name = name; }
-
-    public double getPrice() { return price; }
-
-    void setPrice(double price) { this.price = price; }
-
-    public double getArea() { return area; }
-
-    void setArea(double area) { this.area = area; }
-
-    public String getDescription() { return description; }
-
-    void setDescription(String description) { this.description = description; }
-
-    public Set<Reservation> getReservations() { return reservations; }
-
-    void setReservations(Set<Reservation> reservations) { this.reservations = reservations; }
-
-    public Set<Client> getClients() { return clients; }
-
-    void setClients(Set<Client> clients) { this.clients = clients; }
 
     @Override
     public String toString() {

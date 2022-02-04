@@ -1,96 +1,59 @@
 package com.rest.rentalapp.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Objects;
 
+@Access(AccessType.FIELD)
+@Getter
+@Setter
 @Entity
-@Table(name = "reservations")
+@Table(name = "RESERVATIONS")
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
     @Column(name = "reservation_id")
-    private int reservationId;//@Embedded//private RentalPeriod rentalPeriod = new RentalPeriod();
-    private LocalDate begin;
-    private LocalDate end;
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "owner_id")
+    int reservationId;
+
+    private Date begin;
+
+    private Date end;
+
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH})
+    @JoinColumn(name = "OWNER_ID")
     private Client owner;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "guest_id")
+
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH})
+    @JoinColumn(name = "GUEST_ID")
     private Client guest;
+
     private double cost;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "apartment_id")
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "APARTMENT_ID")
     private Apartment apartment;
+
+
 
     public Reservation() {
     }
 
-    public Reservation(int reservationId, LocalDate begin, LocalDate end, Client owner, Client guest, double cost, Apartment apartment) {
-        this.reservationId = reservationId;
-        this.begin = begin;
-        this.end = end;
-        this.owner = owner;
-        this.guest = guest;
-        this.cost = cost;
-        this.apartment = apartment;
+    public Reservation(int reservationId, Date begin, Date end, Client owner, Client guest, double cost, Apartment apartment) {
     }
 
     public void updateFrom(final Reservation source) {
-        //rentalPeriod = source.rentalPeriod;
+        begin = source.begin;
+        end = source.end;
+        owner = source.owner;
         guest = source.guest;
         cost = source.getCost();
         apartment = source.apartment;
 
-    }
-
-    public int getReservationId() { return reservationId; }
-
-    public void setReservationId(int reservationId) { this.reservationId = reservationId; }
-
-    //public int getRentalPeriod() {
-        //return rentalPeriod.countDays(); }
-
-    //void setRentalPeriod(RentalPeriod rentalPeriod) { this.rentalPeriod = rentalPeriod; }
-
-    public Client getOwner() { return owner; }
-
-    void setOwner(Client owner) { this.owner = owner; }
-
-    public Client getGuest() { return guest; }
-
-    void setGuest(Client guest) { this.guest = guest; }
-
-    public double getCost() {
-        return cost;
-    }
-
-    //public double getCost() {
-       // assert apartment != null;
-        //return rentalPeriod.countDays() * apartment.getPrice(); }
-
-    void setCost(double cost) { this.cost = cost; }
-
-    public Apartment getApartment() { return apartment; }
-
-    public void setApartment(Apartment apartment) { this.apartment = apartment; }
-
-    public LocalDate getBegin() {
-        return begin;
-    }
-
-    void setBegin(LocalDate begin) {
-        this.begin = begin;
-    }
-
-    public LocalDate getEnd() {
-        return end;
-    }
-
-    void setEnd(LocalDate end) {
-        this.end = end;
     }
 
     @Override
